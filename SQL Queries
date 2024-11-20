@@ -1,0 +1,128 @@
+# Query 1. Write an SQL statement that correctly uses implements an inner join. Explain the
+purpose of your query for your database solution.
+
+START TRANSACTION;
+
+SELECT 
+    "order".order_id,
+    customer.cust_fname,
+    customer.cust_lname,
+    "order".order_date,
+    "order".total_amount
+FROM 
+    "order" AS "order"
+INNER JOIN 
+    customer AS customer 
+ON 
+    "order".cust_id = customer.cust_id;
+	
+COMMIT;
+
+
+# Query 2. Write an SQL statement that correctly uses implements an outer join. Explain the
+purpose of your query for your database solution.
+
+START TRANSACTION;
+
+SELECT 
+    customer.cust_id, 
+    customer.cust_fname, 
+    customer.cust_lname, 
+    customer.cust_address, 
+    customer.cust_phone, 
+    customer.cust_email, 
+    "order".order_id, 
+    "order".order_date, 
+    "order".total_amount
+FROM 
+    customer
+LEFT OUTER JOIN 
+    "order" ON customer.cust_id = "order".cust_id;
+
+COMMIT;
+
+
+# Query 3. Write an SQL statement that correctly uses your specialisation hierarchy. Explain the
+purpose of your query for your database solution.
+
+START TRANSACTION;
+
+SELECT 
+    emp_id, 
+    emp_fname, 
+    emp_lname, 
+    position
+FROM 
+    employee
+UNION ALL
+SELECT 
+    emp_id, 
+    emp_fname, 
+    emp_lname, 
+    depart_name AS position
+FROM 
+    manager;
+
+COMMIT;
+
+
+
+# Query 4. Write an SQL statement that correctly uses the ‘GROUP BY’ and ‘HAVING’ operators to
+select an aggregation of data (e.g. SUM, AVG, COUNT). Explain the purpose of your query for
+your database solution.
+
+START TRANSACTION;
+
+SELECT 
+    customer.cust_id, 
+    cust_fname, 
+    cust_lname, 
+    SUM(total_amount) AS total_order_amount
+FROM 
+    customer
+INNER JOIN 
+    "order" ON customer.cust_id = "order".cust_id
+GROUP BY 
+    customer.cust_id, 
+    cust_fname, 
+    cust_lname
+HAVING 
+    SUM(total_amount) > 50;
+
+
+COMMIT;
+
+
+# Query 5. Write an SQL statement that uses an inner SQL query (SELECT). Explain the purpose of
+your query for your database solution.
+
+START TRANSACTION;
+
+SELECT 
+    cust_id, 
+    cust_fname, 
+    cust_lname, 
+    cust_address, 
+    cust_phone, 
+    cust_email
+FROM 
+    customer
+WHERE 
+    cust_id IN (SELECT DISTINCT cust_id FROM "order");
+
+COMMIT;
+
+
+# Query 6. Write an SQL statement that correctly uses the ‘UPDATE’ symbol to modify at least three
+rows of data in one of your tables. Explain the purpose of your query for your database solution.
+
+START TRANSACTION;
+
+UPDATE 
+    employee
+SET 
+    position = 'Senior Cashier'
+WHERE 
+    position = 'Cashier';
+
+COMMIT;
